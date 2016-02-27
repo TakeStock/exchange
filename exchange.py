@@ -27,7 +27,7 @@ class Exchange:
 			processEmails();
 
 	def processEmails(self):
-		
+		self.logger.Info("Processing emails");	
 	
 	
 
