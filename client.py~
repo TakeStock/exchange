@@ -2,6 +2,7 @@ import poplib;
 import email.parser;
 import string;
 import smtplib;
+import sys;
 from email.mime.text import MIMEText
 
 exchangeEmail = 'takeallthestock@gmail.com';

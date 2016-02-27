@@ -5,13 +5,10 @@ import smtplib;
 import sys;
 from email.mime.text import MIMEText
 
-exchangeEmail = 'takeallthestock@gmail.com';
-exchangePass = '14142135';
-
-def connect():
+def connect(user, password):
 	mailbox = poplib.POP3_SSL('pop.googlemail.com');
-	mailbox.user('takeallthestock@gmail.com');
-	mailbox.pass_(exchangePass);
+	mailbox.user(user);
+	mailbox.pass_(password);
 	print('Successfully connected');
 	return mailbox;
 
