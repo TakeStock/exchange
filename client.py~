@@ -1,26 +1,53 @@
 import poplib;
 import email.parser;
 import string;
+import smtplib;
+from email.mime.text import MIMEText
 
-def readEmail():
+exchangeEmail = 'takeallthestock@gmail.com';
+exchangePass = '14142135';
+
+def connect():
 	mailbox = poplib.POP3_SSL('pop.googlemail.com');
 	mailbox.user('takeallthestock@gmail.com');
-	mailbox.pass_('14142135');
+	mailbox.pass_(exchangePass);
 	print('Successfully connected');
+	return mailbox;
 
-	(response, body, bytes) = mailbox.retr(4);
-	rawString = '\n'.join(str(s)[2:-1] for s in body);
+def readEmail():
+	mailbox = connect();
+
+	(response, rawLines, bytes) = mailbox.retr(4);
+	rawString = '\n'.join(str(s)[2:-1] for s in rawLines);
 	mail = email.message_from_string(rawString);
 
-	print("------------");
-	print(mail['subject']);
-	print(mail['from']);
 	parts = mail.get_payload()[0]
 
 	for part in mail.walk():
 		if part.get_content_type() == 'text/plain':
 			body = part.get_payload();
 
-	print('body >');
-	print(body);
-readEmail();
+	return [mail['from'], mail['subject'], body];
+
+def sendEmail(to, subject, body):
+	email = MIMEText(body);
+	email['subject'] = subject;
+	email['from'] = exchangeEmail;
+	email['to'] = to;
+
+	smtp = smtplib.SMTP('smtp.gmail.com');
+	smtp.starttls();
+	smtp.login(exchangeEmail, exchangePass);
+	smtp.sendmail(exchangeEmail, to, email.as_string());
+	smtp.quit();
+
+def main():
+
+	sendEmail('thomasjackdalby@gmail.com', 'testy', 'testuth this email');
+
+	email = readEmail();
+	print('from: ' + email[0]);
+	print('subject: ' + email[1]);
+	print('body: ' + email[2]);
+
+main();

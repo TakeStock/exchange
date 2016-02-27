@@ -1,0 +1,28 @@
+class Logger:
+
+	def __init__(self, _type):
+		self.type = _type;
+	
+	def Info(self, message):
+		print("[" + self.type + "] Info: " + message);
+
+	def Error(self, message):
+		print("[" + self.type + "] Error: " + message);
+
+	def Debug(self, message):
+		print("[" + self.type + "] Debug: " + message);
+
+
+
+class ConsoleColour:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    END = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+logger = Logger('Logger');
+logger.Info('test');
