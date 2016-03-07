@@ -1,6 +1,7 @@
 #requires creation of SQL database "TAKESTOCKDB" with a root password of "3141592654"
 
 def wallet_init():
+    #ready to use
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
@@ -13,11 +14,7 @@ def wallet_init():
     USER CHAR(40) NOT NULL,
     AFFILIATION CHAR(20),
     RESETS INT,
-    CREDITS FLOAT,
-    TESTSHARE INT )"""
-    cursor.execute(sql)
-    sql = """INSERT INTO WALLET(USER, AFFILIATION, RESETS, CREDITS, TESTSHARE)
-    VALUES ('cdw202@gmail.com', 'dkgfluids', 0, 1000, 1)"""
+    CREDITS FLOAT )"""
     cursor.execute(sql)
     db.commit()
     #Log
@@ -27,27 +24,27 @@ def wallet_init():
     COMMAND CHAR(20),
     COMPANY CHAR(20),
     NSHARES INT,
+    PRICE FLOAT,
     STATUS INT )"""
-    cursor.execute(sql)
-    sql = """INSERT INTO LOG(USER, COMMAND, COMPANY, NSHARES, STATUS)
-    VALUES ('cdw202@gmail.com', 'query', 'YHOO', 1, 0)"""
     cursor.execute(sql)
     db.commit()
     db.close()
     return
 
 def user_add(email):
+    #ready to use
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
-    sql = """INSERT INTO WALLET(USER, AFFILIATION, RESETS, CREDITS, TESTSHARE)
-    VALUES ('%s', 'default', 0, 1000, 1)""" % (email)
+    sql = """INSERT INTO WALLET(USER, AFFILIATION, RESETS, CREDITS)
+    VALUES ('%s', 'default', 0, 1000)""" % (email)
     cursor.execute(sql)
     db.commit()
     db.close()
     return
 
-def user_query():
+def user_query(email):
+    #not ready
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
@@ -56,6 +53,7 @@ def user_query():
     return results
 
 def user_reset(email):
+    #not ready
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
@@ -65,6 +63,7 @@ def user_reset(email):
     return
 
 def share_query():
+    #not ready
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
@@ -77,22 +76,30 @@ def share_query():
     return results
 
 def share_defeature(shareID):
+    #ready to use
     for char in '@.-':
         shareID = shareID.translate(None,char)
     return shareID
 
 def share_add(shareID):
+    #ready to use
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
     #cursor.execute("DECLARE CONTINUE handler FOR 1064 BEGIN END")
-    sql = """ALTER TABLE WALLET ADD %s INT NOT NULL DEFAULT 0""" % (shareID)
+    sql = """ALTER TABLE WALLET ADD %s INT NOT NULL DEFAULT 0""" % (share_defeature(shareID))
+    cursor.execute(sql)
+    db.commit()
+    #log entry
+    sql = """INSERT INTO LOG(USER, COMMAND, COMPANY, NSHARES, PRICE, STATUS)
+    VALUES ('admin', 'add_share', '%s', 0, 0, 0)""" % (shareID)
     cursor.execute(sql)
     db.commit()
     db.close()
     return
 
-def share_sell(user, command, shareID, nsell):
+def share_sell(user, shareID, nsell):
+    #not ready
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
@@ -106,8 +113,40 @@ def share_sell(user, command, shareID, nsell):
     db.commit()
     db.close()
     return
+
+def share_buy(user, shareID, nbuy):
+    #not ready
+    import MySQLdb
+    db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
+    cursor = db.cursor()
+    #get wallet data
+    sql = """SELECT %s FROM WALLET WHERE USER = '%s'""" % (share_defeature(shareID),user)
+    cursor.execute(sql)
+    shares1 = cursor.fetchone()
+    shares1=shares1[0]
+    sql = """SELECT CREDITS FROM WALLET WHERE USER = '%s'""" %(user)
+    cursor.execute(sql)
+    credits1 = cursor.fetchone()
+    credits1 = credits1[0]
+    #get share price
+    price = 100
+    #valid trade request
+    if nbuy*price<=credits1:
+        credits2 = credits1 - (nbuy*price)
+        shares2 = shares1 + nbuy
+        sql = """UPDATE WALLET SET CREDITS=%f, %s=%d WHERE USER = '%s'""" % (credits2,share_defeature(shareID),shares2,user)
+        cursor.execute(sql)
+        db.commit()
+        db.close()
+        #log and email success
+    else:
+        #log email fail
+        db.close()
+    return
         
 wallet_init()
-user_add('test@test.com')
-share_add('TEST2')
-
+user_add('cdw202@gmail.com')
+share_add('BAB.L')
+user_add('c.wood@fnc.co.uk')
+share_add('YHOO')
+share_buy('cdw202@gmail.com','BAB.L',2)
