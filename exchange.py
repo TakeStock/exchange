@@ -1,37 +1,37 @@
 import sys;
-import logger;
+from logging import Logger;
 
-class Exchange:
-	logger = logger.Logger('Exchange');
+class Exchange(object):
+	logger = Logger('Exchange');
 
-	def main(self):
-		self.logger.Info('Welcome to the Take Stock Exchange :)');
+	def main(s):
+		s.logger.Info('Welcome to the Take Stock Exchange :)');
 
 		args = sys.argv;
 		command = args[1];
 
 		option = {
-			'test' : self.test, 
-			'host' : self.host,
+			'test' : s.test, 
+			'host' : s.host,
 		}[command];
 
 		option(args);
 
-	def test(self, args):
-		self.logger.Info('test');
+	def test(s, args):
+		s.logger.Info('test');
 
-	def host(self, args):
-		self.logger.Info('Hosting exchange...');
+	def host(s, args):
+		s.logger.Info('Hosting exchange...');
 		
 		while(True):
 			processEmails();
 
-	def processEmails(self):
-		self.logger.Info("Processing emails");	
+	def processEmails(s):
+		s.logger.Info("Processing emails");		
+		# check if any emails are in the queue
+
 	
-	
-
-
-
-
-Exchange().main();
+		
+		
+e = Exchange();
+e.main();

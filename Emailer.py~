@@ -1,23 +1,26 @@
-import poplib;
-import email.parser;
-import string;
-import smtplib;
-import sys;
-from email.mime.text import MIMEText
+from logging import Logger;
 
-class Client(object):
-	def connect(user, password):
+class EmailServer(object):
+
+	def __init__(s):
+		logger = Logger('EmailServer'); 	
+
+	def setup(s, username, password):
+		s.username = username;
+		s.password = password;
+
+	def connect(s):
 		mailbox = poplib.POP3_SSL('pop.googlemail.com');
-		mailbox.user(user);
-		mailbox.pass_(password);
+		mailbox.user(s.username);
+		mailbox.pass_(s.password);
 		print('Successfully connected');
 		return mailbox;
 	
-	def readEmail():
-		mailbox = connect();
+	def readEmail(s):
+		mailbox = s.connect();
 	
 		(response, rawLines, bytes) = mailbox.retr(4);
-		rawString = '\n'.join(str(s)[2:-1] for s in rawLines);
+		rawString = '\n'.join(str(l)[2:-1] for l in rawLines);
 		mail = email.message_from_string(rawString);
 	
 		parts = mail.get_payload()[0]
@@ -28,7 +31,7 @@ class Client(object):
 	
 		return [mail['from'], mail['subject'], body];
 	
-	def sendEmail(to, subject, body):
+	def sendEmail(s, to, subject, body):
 		email = MIMEText(body);
 		email['subject'] = subject;
 		email['from'] = exchangeEmail;
@@ -39,12 +42,7 @@ class Client(object):
 		smtp.login(exchangeEmail, exchangePass);
 		smtp.sendmail(exchangeEmail, to, email.as_string());
 		smtp.quit();
-	
-	def main():
-	
-		sendEmail('thomasjackdalby@gmail.com', 'testy', 'testuth this email');
-	
-		email = readEmail();
-		print('from: ' + email[0]);
-		print('subject: ' + email[1]);
-		print('body: ' + email[2]);
+
+args = sys.argv;
+e = EmailServer();
+e.Setup(args[1], args[2]);
