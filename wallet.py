@@ -37,7 +37,7 @@ def user_add(email):
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
     sql = """INSERT INTO WALLET(USER, AFFILIATION, RESETS, CREDITS)
-    VALUES ('%s', 'default', 0, 1000)""" % (email)
+    VALUES ('%s', 'default', 0, 1000000)""" % (email)
     cursor.execute(sql)
     db.commit()
     #log entry
@@ -46,15 +46,18 @@ def user_add(email):
     cursor.execute(sql)
     db.commit()
     db.close()
-    #add email response
+    print 'success' #add email response
     return
 
 def user_query(email):
-    #not ready
+    #ready to use
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
+    sql = """SELECT * FROM WALLET WHERE USER = '%s'""" % (email)
+    cursor.execute(sql)
     results = cursor.fetchall()
+    results = results[0]
     db.close()
     return results
 
@@ -79,7 +82,7 @@ def user_reset(user):
     db.commit()
     #re-add user, affiliation and reset +1
     sql = """INSERT INTO WALLET(USER, AFFILIATION, RESETS, CREDITS)
-    VALUES ('%s', '%s', %d, 1000)""" % (user,affiliation,resets)
+    VALUES ('%s', '%s', %d, 1000000)""" % (user,affiliation,resets)
     cursor.execute(sql)
     db.commit()
     #log entry
@@ -88,11 +91,11 @@ def user_reset(user):
     cursor.execute(sql)
     db.commit()
     db.close()
-    #add email response
+    print 'success' #add email response
     return
 
 def share_query():
-    #not ready
+    #ready for use
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
@@ -128,7 +131,7 @@ def share_add(shareID):
     return
 
 def share_sell(user, shareID, nsell):
-    #mostly ready - missing email response
+    #ready to use
     import MySQLdb
     db = MySQLdb.connect("localhost","root","3141592654","TAKESTOCKDB")
     cursor = db.cursor()
@@ -142,7 +145,7 @@ def share_sell(user, shareID, nsell):
     credits1 = cursor.fetchone()
     credits1 = credits1[0]
     #get share price
-    price = 100
+    price = share_price(shareID)
     #valid trade request
     if nsell<=shares1:
         status = 'success'
@@ -156,7 +159,7 @@ def share_sell(user, shareID, nsell):
         cursor.execute(sql)
         db.commit()
         db.close()
-        #add email success
+        print 'success' #add email success
     else:
         status = 'fail'
         sql = """INSERT INTO LOG(USER, COMMAND, COMPANY, NSHARES, PRICE, STATUS)
@@ -164,7 +167,7 @@ def share_sell(user, shareID, nsell):
         cursor.execute(sql)
         db.commit()
         db.close()
-        #add email fail
+        print 'error' #add email fail
     return
 
 def share_buy(user, shareID, nbuy):
@@ -182,7 +185,7 @@ def share_buy(user, shareID, nbuy):
     credits1 = cursor.fetchone()
     credits1 = credits1[0]
     #get share price
-    price = 100
+    price = share_price(shareID)
     #valid trade request
     if nbuy*price<=credits1:
         status = 'success'
@@ -196,7 +199,7 @@ def share_buy(user, shareID, nbuy):
         cursor.execute(sql)
         db.commit()
         db.close()
-        #add email success
+        print 'success' #change to email response
     else:
         status = 'fail'
         sql = """INSERT INTO LOG(USER, COMMAND, COMPANY, NSHARES, PRICE, STATUS)
@@ -204,8 +207,14 @@ def share_buy(user, shareID, nbuy):
         cursor.execute(sql)
         db.commit()
         db.close()
-        #add email fail
+        print 'error' #change to email response
     return
+
+def share_price(ticker):
+    from yahoo_finance import Share
+    company = Share(ticker)
+    price = float(company.get_price())
+    return price
         
 wallet_init()
 user_add('cdw202@gmail.com')
