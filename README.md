@@ -22,10 +22,10 @@ RVT 10
 
 - Time as a column in the server logs
 - New commands:
-	sell/buy all
-	current wallet value
-	newsletter daily/weekly
+	- sell/buy all
+	- current wallet value
+	- newsletter daily/weekly
 		- biggest grower
 		- best value stock
 		- best portfolio
-	
+	- refuse -ve buys or +ve sells
