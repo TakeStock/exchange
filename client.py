@@ -41,7 +41,6 @@ class Client(object):
 		smtp.quit();
 	
 	def main():
-	
 		sendEmail('thomasjackdalby@gmail.com', 'testy', 'testuth this email');
 	
 		email = readEmail();

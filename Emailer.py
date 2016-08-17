@@ -1,8 +1,12 @@
 import sys;
 from logging import Logger;
-
-class EmailServer(object):
-
+import poplib;
+import email.parser;
+import string;
+import smtplib;
+from email.mime.text import MIMEText
+ 
+class Emailer(object):
 	def __init__(s):
 		logger = Logger('EmailServer'); 	
 
@@ -45,5 +49,6 @@ class EmailServer(object):
 		smtp.quit();
 
 args = sys.argv;
-e = EmailServer();
-e.Setup(args[1], args[2]);
+e = Emailer();
+e.setup(args[0], args[1]);
+e.connect();
