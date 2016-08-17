@@ -39,16 +39,18 @@ class Emailer(object):
 	def sendEmail(s, to, subject, body):
 		email = MIMEText(body);
 		email['subject'] = subject;
-		email['from'] = exchangeEmail;
+		email['from'] = s.username;
 		email['to'] = to;
 	
 		smtp = smtplib.SMTP('smtp.gmail.com');
 		smtp.starttls();
-		smtp.login(exchangeEmail, exchangePass);
-		smtp.sendmail(exchangeEmail, to, email.as_string());
+		smtp.login(s.username, s.password);
+		smtp.sendmail(s.username, to, email.as_string());
 		smtp.quit();
 
 args = sys.argv;
 e = Emailer();
 e.setup(args[0], args[1]);
 e.connect();
+e.sendEmail("cdw202@gmail.com", "test", "test");
+
