@@ -8,32 +8,35 @@
 #step2: cd yahoo-finance
 #step3: python setup.py install
 
-from yahoo_finance import Share
-
 def trade(ticker, nshares):
+    from yahoo_finance import Share
     company = Share(ticker)
     price = nshares * float(company.get_price())
     return price
 
 def query_price(ticker):
+    from yahoo_finance import Share
     company = Share(ticker)
     price = float(company.get_price())
     return price
 
 def query_open(ticker):
+    from yahoo_finance import Share
     company = Share(ticker)
     price = float(company.get_open())
     return price
 
 def query_change(ticker):
+    from yahoo_finance import Share
     company = Share(ticker)
-    price = float(company.get_open())
-    return price
+    change = float(company.get_change())
+    return change
 
 def query_trade_time(ticker):
+    from yahoo_finance import Share
     company = Share(ticker)
-    price = float(company.get_trade_datetime())
-    return price
+    datetime = float(company.get_trade_datetime())
+    return datetime
 
 #test = 'MPI.L'
 print trade('YHOO',1)
