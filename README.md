@@ -1,24 +1,26 @@
-## TakeStock
+# TakeStock
 
-# Welcome :)
+## Welcome :)
 
 Hello and welcome to TakeStock. 
 
 
 
-# Commands
+## Commands
 
-name: buy
-arguments: 
+Here is a "semi" comprehensive list of all possible commands for TakeStock.
 
+### buy
+
+Allows a broker to buy sum sharze.
 
 example...
 
+```
 Subject: Buy
-Body:
-RVT 10
-
-#Future Features
+Body: RVT 10
+```
+## Future Features
 
 - Time as a column in the server logs
 - New commands:
