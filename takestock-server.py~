@@ -1,7 +1,7 @@
-#Takestock stock market trading simulator cdw202@gmail.com
+#Takestock stock market trading simulator cdw202
 #Requires MySQLdb
 # 1. Install MySQL using apt-get
-# 2. Create SQL database "TAKESTOCKDB" with a root password of "3141592654"
+# 2. Create SQL database "TAKESTOCKDB"
 #Requires yahoo_finance
 #Open terminal in run directory
 # 1. git clone git://github.com/lukaszbanasiak/yahoo-finance.git
@@ -9,17 +9,19 @@
 # 3. python setup.py install
 
 #Login details
+#SQL database
 global u
-u="root"
+u=""
 global p
-p="3141592654"
+p=""
+#Gmail account
 global mu
-mu='takestockcmd@gmail.com'
+mu=''
 global mp
-mp='3.!$!%("^%$'
-suemail1='cdw202@gmail.com'
-suemail2='thomasjackdalby@gmail.com'
-serveremail=mu
+mp=''
+#Admin user email addresses
+suemail1=''
+suemail2=''
 
 def wallet_init():
     #ready to use
@@ -349,7 +351,7 @@ def send_email(to,subject,body):
     #construct message
     msg=MIMEText(body)
     msg['Subject']=subject
-    msg['From']=serveremail
+    msg['From']=mu
     msg['To']=to
     #connect to gmail
     s=smtplib.SMTP('smtp.gmail.com')

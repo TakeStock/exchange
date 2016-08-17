@@ -362,8 +362,6 @@ def send_email(to,subject,body):
     s.quit()
     return
 
-
-
 import time
 flag1=0
 while True:

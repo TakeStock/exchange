@@ -1,56 +1,42 @@
-import sys;
-from logging import Logger;
-import poplib;
-import email.parser;
-import string;
-import smtplib;
+import smtplib
 from email.mime.text import MIMEText
- 
+import datetime
+
+global server
+server = 'takestockcmd@gmail.com'
+global DEBUG
+DEBUG = True
+
 class Emailer(object):
-	def __init__(s):
-		logger = Logger('EmailServer'); 	
 
-	def setup(s, username, password):
-		s.username = username;
-		s.password = password;
-
-	def connect(s):
-		mailbox = poplib.POP3_SSL('pop.googlemail.com');
-		mailbox.user(s.username);
-		mailbox.pass_(s.password);
-		print('Successfully connected');
-		return mailbox;
+	def send_email(self, to, subject, body):
+		if (self.isSetup == False):
+			print 'Need to setup first'
+			return
 	
-	def readEmail(s):
-		mailbox = s.connect();
+		#construct message
+		msg=MIMEText(body)
+		msg['Subject']=subject
+		msg['From']=self.username[0:-8]
+		msg['To']=to
+		
+		#connect to gmail
+		s=smtplib.SMTP('smtp.gmail.com')
+		s.starttls()
+		s.login(self.username, self.password)
+			
+		#send message
+		s.sendmail(self.username,to,msg.as_string())
+		s.quit()
+		print 'Sent %s @ %s' % (subject + ':' + body, datetime.datetime.now())
 	
-		(response, rawLines, bytes) = mailbox.retr(4);
-		rawString = '\n'.join(str(l)[2:-1] for l in rawLines);
-		mail = email.message_from_string(rawString);
+	def send_command(self, command, details):
+		self.send_email(server, command, details)
 	
-		parts = mail.get_payload()[0]
+	def read_email(self):
+		print 'something'
 	
-		for part in mail.walk():
-			if part.get_content_type() == 'text/plain':
-				body = part.get_payload();
-	
-		return [mail['from'], mail['subject'], body];
-	
-	def sendEmail(s, to, subject, body):
-		email = MIMEText(body);
-		email['subject'] = subject;
-		email['from'] = s.username;
-		email['to'] = to;
-	
-		smtp = smtplib.SMTP('smtp.gmail.com');
-		smtp.starttls();
-		smtp.login(s.username, s.password);
-		smtp.sendmail(s.username, to, email.as_string());
-		smtp.quit();
-
-args = sys.argv;
-e = Emailer();
-e.setup(args[0], args[1]);
-e.connect();
-e.sendEmail("cdw202@gmail.com", "test", "test");
-
+	def setup(self, new_username, new_password):
+		self.username = new_username
+		self.password = new_password
+		self.isSetup = True
