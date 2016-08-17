@@ -14,11 +14,5 @@ class Client(object):
 		emailer.setup(lines[0], lines[1]) 
 		emailer.send_command('buy', 'RVT 10') 
 
-	
-
-
-
-
-
 c = Client();
 c.run();

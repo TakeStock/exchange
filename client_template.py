@@ -18,10 +18,9 @@ class Client(object):
 		
 		stocks = ['HOG', 'RVT']
 
-		#self.emailer.send_command('buy', 'TNE.AX %s' % 14)
-
+		self.emailer.send_command('reset', 'BOOM')
 		i = 0
-		while(i<10):
+		while(i<0):
 			amount = random.randint(-5, 5);
 			self.emailer.send_command('buy', 'TNE.AX %s' % amount)
 			i = i+1
