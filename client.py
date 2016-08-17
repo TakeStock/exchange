@@ -5,7 +5,7 @@ import smtplib;
 import sys;
 from email.mime.text import MIMEText
 
-class Client(object):
+class Client(object):	
 	def connect(user, password):
 		mailbox = poplib.POP3_SSL('pop.googlemail.com');
 		mailbox.user(user);
