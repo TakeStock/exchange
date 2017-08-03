@@ -4,6 +4,7 @@
 # Ignore vim temporary files
 *.*~
 *.swp
+*.pyc
 
 # Ignore sensitive data
 *.xtxt
