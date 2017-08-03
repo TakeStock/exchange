@@ -20,11 +20,10 @@ class Client(object):
 
         #print self.check_price('BAB.L');
 
-
-        self.buy('BAB.L', 200)
-        self.buy('NIOBF', 200)
-        self.buy('RVT', 200)
-        self.buy('HOG', 'max')
+        self.buy('RVT', 0)
+        #self.buy('NIOBF', 200)
+        #self.buy('RVT', 200)
+        #self.buy('HOG', 'max')
 
     def buy(self, ticker, amount):
         self.emailer.send_command('buy', '%s %s' % (ticker, amount));
